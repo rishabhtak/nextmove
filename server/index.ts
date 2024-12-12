@@ -32,7 +32,7 @@ const app = express();
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: "https://nextmove-2ecf.onrender.com",
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-From']
@@ -50,6 +50,15 @@ const sessionMiddleware = session({
     sameSite: "none"
   }
 });
+
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.setHeader('Surrogate-Control', 'no-store');
+  next();
+});
+
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   sessionMiddleware(req, res, (err) => {
