@@ -7,6 +7,8 @@ import session from "express-session";
 import path from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
+const MongoDBStore = require('connect-mongodb-session')(session);
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,6 +51,18 @@ const sessionMiddleware = session({
     sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax"
   }
 });
+
+const store = new MongoDBStore({
+  uri: process.env.DATABASE_URL,
+  collection: 'sessions'
+});
+
+app.use(session({
+  secret: 'your-secret-key',
+  store: store,
+  resave: false,
+  saveUninitialized: false
+}));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   sessionMiddleware(req, res, (err) => {
