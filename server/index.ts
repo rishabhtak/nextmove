@@ -31,9 +31,7 @@ const app = express();
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.NODE_ENV === "production" 
-    ? ['https://vermillion-mooncake-924f42.netlify.app', 'https://nextmove-api.onrender.com']
-    : ['http://localhost:3000', 'http://localhost:5000'],
+  origin: process.env.CLIENT_URL,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-From']
